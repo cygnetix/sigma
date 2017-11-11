@@ -11,9 +11,10 @@ detection:
             - '*/install_flash_player.exe'
             - '*/flash_install.php*'
     filter:
-        cs-uri-query: '*.adobe.com/*'
+        cs-uri-query:
+            - '*.adobe.com/*'
+            - '*download.macromedia.com/*'
     condition: selection and not filter
 falsepositives:
     - Unknown flash download locations
 level: high
-
