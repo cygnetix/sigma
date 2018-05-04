@@ -1,7 +1,8 @@
 title: PowerShell PSAttack 
 status: experimental
 description: Detects the use of PSAttack PowerShell hack tool
-reference: https://adsecurity.org/?p=2921
+references:
+    - https://adsecurity.org/?p=2921
 author: Sean Metcalf (source), Florian Roth (rule)
 logsource:
     product: windows
@@ -10,9 +11,9 @@ logsource:
 detection:
     selection:
         EventID: 4103
-    keywords: 
+    keyword: 
         - 'PS ATTACK!!!'
-    condition: selection and keywords
+    condition: all of them
 falsepositives:
     - Pentesters
 level: high

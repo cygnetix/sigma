@@ -1,8 +1,10 @@
-title: PsExec tool execution on destination host
+title: PsExec Tool Execution
 status: experimental
 description: Detects PsExec service installation and execution events (service and Sysmon)
 author: Thomas Patzke
-reference: https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+references:
+    - https://www.jpcert.or.jp/english/pub/sr/ir_research.html
+    - https://jpcertcc.github.io/ToolAnalysisResultSheet
 logsource:
     product: windows
 detection:
@@ -17,7 +19,7 @@ detection:
         EventID: 1
         Image: '*\PSEXESVC.exe'
         User: 'NT AUTHORITY\SYSTEM'
-    condition: service_installation or service_execution or sysmon_processcreation
+    condition: 1 of them
 fields:
     - EventID
     - CommandLine

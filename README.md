@@ -3,9 +3,10 @@
 ![sigma_logo](./images/Sigma_0.3.png)
 
 # Sigma
+
 Generic Signature Format for SIEM Systems
 
-# What is Sigma?
+# What is Sigma
 
 Sigma is a generic and open signature format that allows you to describe relevant log events in a straight forward manner. The rule format is very flexible, easy to write and applicable to any type of log file. The main purpose of this project is to provide a structured form in which researchers or analysts can describe their once developed detection methods and make them shareable with others.
 
@@ -14,8 +15,10 @@ Sigma is for log files what [Snort](https://www.snort.org/) is for network traff
 This repository contains:
 
 * Sigma rule specification in the [Wiki](https://github.com/Neo23x0/sigma/wiki/Specification)
-* Open repository for sigma signatures in the ```./rules```subfolder
+* Open repository for sigma signatures in the `./rules`subfolder
 * A converter that generate searches/queries for different SIEM systems [work in progress]
+
+![sigma_description](./images/Sigma-description.png)
 
 ## Hack.lu 2017 Talk
 
@@ -31,22 +34,6 @@ This repository contains:
 * Write a rule converter for your custom log analysis tool and process new Sigma rules automatically
 * Provide a free or commercial feed for Sigma signatures
 
-# Sigma Converter
-
-The converter is currently under development in the *devel-sigmac* branch of this project. It has currently the
-following capabilities:
-
-* Parsing of Sigma rule files
-* Conversion of searches into Elasticsearch and Splunk queries
-
-Planned main features are:
-
-* Conversion of aggregation expressions (after the pipe character)
-* Output of Kibana JSON configurations
-
-Support for further SIEM solutions can be added by developing an corresponsing output backend class.
-
-![sigma_description](./images/Sigma-description.png)
 
 # Why Sigma
 
@@ -72,6 +59,10 @@ The specifications can be found in the [Wiki](https://github.com/Neo23x0/sigma/w
 
 The current specification is a proposal. Feedback is requested.
 
+# Getting Started
+
+Florian wrote a short [rule creation tutorial](https://www.nextron-systems.com/2018/02/10/write-sigma-rules/) that can help you getting started.
+
 # Examples
 
 Windows 'Security' Eventlog: Access to LSASS Process with Certain Access Mask / Object Type (experimental)
@@ -89,18 +80,59 @@ Sysmon: Web Shell Detection
 Windows 'Security' Eventlog: Suspicious Number of Failed Logons from a Single Source Workstation
 ![sigma_rule example5](./images/Sigma_rule_example5.png)
 
-## Sigmac
+## Sigma Tools
 
-The beta version of the rule converter 'sigmac' converting a non-correlation rule into an ElasticSearch query
+Sigmac converts sigma rules into queries or inputs of the supported targets listed below. It acts as a frontend to the
+Sigma library that may be used to integrate Sigma support in other projects. Further, there's `merge_sigma.py` which
+merges multiple YAML documents of a Sigma rule collection into simple Sigma rules.
+
 ![sigmac_converter](./images/Sigmac-win_susp_rc4_kerberos.png)
 
-## Supported Targets
+### Supported Targets
 
 * [Splunk](https://www.splunk.com/)
-* [ElasticSearch](https://www.elastic.co/)
+* [Elasticsearch](https://www.elastic.co/)
+* [Kibana](https://www.elastic.co/de/products/kibana)
+* [Elastic X-Pack Watcher](https://www.elastic.co/guide/en/x-pack/current/xpack-alerting.html)
 * [Logpoint](https://www.logpoint.com)
+* Grep with Perl-compatible regular expression support
 
-# Next Steps 
+New targets are continuously developed. A current list can be obtained with `sigmac --target-list` or `sigmac -l`.
+
+### Requirements
+
+The usage of Sigmac or the underlying library requires Python >= 3.5 and PyYAML.
+
+### Installation
+
+It's available on PyPI. Install with:
+
+```bash
+pip3 install sigmatools
+```
+
+Alternatively, if used from the Sigma Github repository, the Python dependencies can be installed with:
+
+```bash
+pip3 install -r tools/requirements.txt
+```
+
+For development (e.g. execution of integration tests with `make` and packaging), further dependencies are required and can be installed with:
+
+```bash
+pip3 install -r tools/requirements-devel.txt
+```
+
+## Contributed Scripts
+
+The directory `contrib` contains scripts that were contributed by the community:
+
+* `sigma2elastalert.py`i by David Routin: A script that converts Sigma rules to Elastalert configurations. This tool
+  uses *sigmac* and expects it in its path.
+
+These tools are not part of the main toolchain and maintained separately by their authors.
+
+# Next Steps
 
 * Integration of feedback into the rule specifications
 * Integration into Threat Intel Exchanges, e.g. [MISP](http://www.misp-project.org/)
@@ -113,6 +145,14 @@ The beta version of the rule converter 'sigmac' converting a non-correlation rul
 
 # Credits
 
-This is a private project mainly developed by Florian Roth and Thomas Patzke with feedback from many fellow analysts and friends. Rules are our own or have been drived from blog posts, tweets or other public sources that are referenced in the rules.   
+This is a private project mainly developed by Florian Roth and Thomas Patzke with feedback from many fellow analysts and friends. Rules are our own or have been drived from blog posts, tweets or other public sources that are referenced in the rules.
 
 Copyright for Tree Image: [studiobarcelona / 123RF Stock Photo](http://www.123rf.com/profile_studiobarcelona)
+
+# Licenses
+
+The content of this repository is released under the following licenses:
+
+* The toolchain (everything under `tools/`) is licensed under the [GNU Lesser General Public License](https://www.gnu.org/licenses/lgpl-3.0.en.html).
+* The [Sigma specification](https://github.com/Neo23x0/sigma/wiki) is public domain.
+* Everything else, especially the rules contained in the `rules/` directory is released under the [GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.en.html).

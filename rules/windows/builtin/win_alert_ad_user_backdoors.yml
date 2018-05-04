@@ -1,6 +1,6 @@
 title: Active Directory User Backdoors
 description: Detects scenarios where one can control another users account without having to use their credentials via msDS-AllowedToDelegateTo and or service principal names (SPN).
-reference:
+references:
     - https://msdn.microsoft.com/en-us/library/cc220234.aspx
     - https://adsecurity.org/?p=3466
 author: '@neu5ron'
@@ -20,7 +20,7 @@ detection:
         EventID: 5136
         ObjectClass: 'user'
         AttributeLDAPDisplayName: 'servicePrincipalName'
-    condition: selection1 or selection2 or selection3
+    condition: 1 of them
 falsepositives: 
     - Unknown
 level: high
