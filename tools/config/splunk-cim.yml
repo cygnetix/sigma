@@ -1,0 +1,5 @@
+fieldmappings:
+    UserAgent: Web.http_user_agent
+    ClientIP: Web.src
+    URL: Web.url
+    cs-uri-query: Web.url
