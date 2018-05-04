@@ -832,6 +832,41 @@ class SplunkBackend(SingleTextQueryBackend):
         else:
             return " | stats %s(%s) as val by %s | search val %s %s" % (agg.aggfunc_notrans, agg.aggfield, agg.groupfield, agg.cond_op, agg.condition)
 
+class SplunkDMBackend(SingleTextQueryBackend):
+    """Converts Sigma rule into Splunk's SPL for use with Datamodels."""
+    identifier = "splunk_dm"
+    active = True
+
+    reEscape = re.compile('("|\\\\(?![*?]))')
+    reClear = None
+    andToken = " "
+    orToken = " OR "
+    notToken = "NOT "
+    subExpression = "(%s)"
+    listExpression = "(%s)"
+    listSeparator = " "
+    valueExpression = "\"%s\""
+    nullExpression = "NOT %s=\"*\""
+    notNullExpression = "%s=\"*\""
+    mapExpression = "%s=%s"
+    mapListsSpecialHandling = True
+    mapListValueExpression = "%s IN %s"
+
+    def generateMapItemListNode(self, key, value):
+        return "(" + (" OR ".join(['%s=%s' % (key, self.generateValueNode(item)) for item in value])) + ")"
+
+    def generateQuery(self, parsed):
+        summariesonly = self.backend_options.get('summariesonly', 'true')
+        datamodel = self.backend_options.get('datamodel')
+        nodename = self.backend_options.get('nodename')
+        groupby = self.backend_options.get('groupby', 'host')
+        query = self.generateNode(parsed.parsedSearch)
+        
+        if (not datamodel or not nodename):
+            raise BackendError("You must specify -O datamodel=foo -O nodename=bar")
+
+        return "| tstats summariesonly=%s count from datamodel=%s where nodename=%s %s by %s" % (summariesonly, datamodel, nodename, query, groupby)
+
 class GrepBackend(BaseBackend, QuoteCharMixin):
     """Generates Perl compatible regular expressions and puts 'grep -P' around it"""
     identifier = "grep"
